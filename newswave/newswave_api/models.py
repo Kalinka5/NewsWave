@@ -25,7 +25,7 @@ class News(models.Model):
 
 
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField()
     news_name = models.ForeignKey(News, on_delete=models.CASCADE)
 
     def __str__(self) -> str:

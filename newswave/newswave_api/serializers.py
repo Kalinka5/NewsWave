@@ -13,13 +13,14 @@ from .models import News, Category, Image
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username','password','first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
         extra_kwargs = {
             'password':{'write_only': True},
         }
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], 
-                                        password = validated_data['password'],
+        user = User.objects.create_user(validated_data['username'],
+                                        email=validated_data['email'],
+                                        password=validated_data['password'],
                                         first_name=validated_data['first_name'],
                                         last_name=validated_data['last_name'])
         return user
@@ -44,7 +45,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class NewsSerializer(serializers.ModelSerializer):
-    category = CategorySerializer
+    category = CategorySerializer()
     images = ImageSerializer(many=True, read_only=True, source='image_set')
 
     class Meta:

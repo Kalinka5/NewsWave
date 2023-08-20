@@ -19,7 +19,7 @@ class RegisterApi(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            "user": UserSerializer(user,    context=self.get_serializer_context()).data,
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "message": "User Created Successfully.  Now perform Login to get your token",
         })
 
@@ -53,7 +53,7 @@ def news(request):
         items = items.filter(category__title=category_name)
 
     # pagination
-    perpage = request.query_params.get('perpage', default=2)
+    perpage = request.query_params.get('perpage', default=3)
     page = request.query_params.get('page', default=1)
     paginator = Paginator(items, per_page=perpage)
 
