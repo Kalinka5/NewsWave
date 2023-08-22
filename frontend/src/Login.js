@@ -19,7 +19,7 @@ const Login = () => {
       setErrorMessage('');
   
       // Redirect the user to the news page
-      navigate('/page1');
+      navigate('/page/1');
     } catch (error) {
       setErrorMessage('Invalid credentials. Please try again.');
     }

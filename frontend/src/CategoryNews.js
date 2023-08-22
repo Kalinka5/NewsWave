@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const FashionNews = () => {
+const CategoryNews = () => {
     const { title } = useParams();
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ const FashionNews = () => {
     return (
         <div className="container mt-5">
             <Navbar bg="light" expand="lg">
-                <Navbar.Brand><Link className="page-link" to="/page1">News</Link></Navbar.Brand>
+                <Navbar.Brand><Link className="page-link" to="/page/1">News</Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
@@ -91,4 +91,4 @@ const FashionNews = () => {
         );
 };
 
-export default FashionNews;
+export default CategoryNews;

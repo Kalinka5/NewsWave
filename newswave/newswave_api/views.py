@@ -42,6 +42,16 @@ def categories(request):
     else:
         return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
 
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def single_category(request, pk):
+    item = get_object_or_404(Category, pk=pk)
+    serialized_category = CategorySerializer(item)
+    return Response(serialized_category.data, status=status.HTTP_200_OK)
+
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def news(request):

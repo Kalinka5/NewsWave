@@ -45,7 +45,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class NewsSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
     images = ImageSerializer(many=True, read_only=True, source='image_set')
 
     class Meta:
