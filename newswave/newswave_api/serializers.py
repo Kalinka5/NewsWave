@@ -32,6 +32,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CurrentUserSerializer(serializers.ModelSerializer):
+    groups = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'groups']
+
+    def get_groups(self, obj):
+        groups = obj.groups.all()
+        return [group.name for group in groups]
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

@@ -4,19 +4,35 @@ import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
 const NewsPage = ({ user }) => {
-  {/* const [isManager, setIsManager] = useState(false); */}
+  const [group, setGroup] = useState(false);
   const { n } = useParams();
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  {/* useEffect(() => {
-    if (user) {
-      // Check if the user is in the "Manager" group
-      const isUserManager = user.groups.includes('Manager');
-      setIsManager(isUserManager);
+   useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Include the token in the headers of the GET request
+      axios.get(`http://127.0.0.1:8000/api/current-user/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => {
+        setGroup(response.data.groups);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error);
+        setLoading(false);
+      });
+    } else {
+      console.log('Token not found in local storage. User is not authenticated.');
+      setLoading(false);
     }
-  }, [user]);
-  */}
+  }, []);
+  
   useEffect(() => {
     const token = localStorage.getItem('token'); // Get the token from local storage
 
@@ -61,8 +77,7 @@ const NewsPage = ({ user }) => {
                         </NavDropdown>
                     </Nav>
                     <Nav className="me-auto">
-                      <Link className="page-link" to="/create-news">Create News</Link>
-                      {/* {isManager && <Link className="page-link" to="/create-news">Create News</Link>}*/}
+                      {group.includes('Manager') && <Link className="page-link" to="/create-news">Create News</Link>}
                     </Nav>
                 </Navbar.Collapse>
                 <nav aria-label="Page navigation example">

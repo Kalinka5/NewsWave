@@ -9,6 +9,31 @@ const NewsDetails = () => {
   const [news, setNews] = useState({});
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState({});
+  const [group, setGroup] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Include the token in the headers of the GET request
+      axios.get(`http://127.0.0.1:8000/api/current-user/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => {
+        setGroup(response.data.groups);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error);
+        setLoading(false);
+      });
+    } else {
+      console.log('Token not found in local storage. User is not authenticated.');
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -95,7 +120,7 @@ const NewsDetails = () => {
         ))}
         </div>
         <div className='container text-center my-3'>
-          <Link className="btn btn-primary" to={`/page/${n}/${id}/update`}>Update News</Link>
+          {group.includes('Manager') && <Link className="btn btn-primary" to={`/page/${n}/${id}/update`}>Update News</Link>}
         </div>
       </div>
     </div>

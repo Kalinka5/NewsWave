@@ -1,14 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
 
-from rest_framework import status, generics, permissions, mixins
+from rest_framework import status, generics
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 from .models import News, Category
-from .serializers import NewsSerializer, CategorySerializer, RegisterSerializer, UserSerializer
+from .serializers import NewsSerializer, CategorySerializer, RegisterSerializer, UserSerializer, CurrentUserSerializer
 
 
 #Register API
@@ -22,6 +21,14 @@ class RegisterApi(generics.GenericAPIView):
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "message": "User Created Successfully.  Now perform Login to get your token",
         })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    user = request.user
+    serializer = CurrentUserSerializer(user)
+    return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
