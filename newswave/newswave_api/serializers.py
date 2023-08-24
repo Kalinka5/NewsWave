@@ -72,3 +72,23 @@ class NewsSerializer(serializers.ModelSerializer):
             Image.objects.create(news_name=news_instance, image=image_data)
 
         return news_instance
+    
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.category = validated_data.get('category', instance.category)
+        
+        # Save the updated instance
+        instance.save()
+
+        # Update images
+        images_data = self.context['request'].data.getlist('images')
+
+        # Handle images for PUT request (replace all images)
+        if self.context.get('request').method == 'PUT':
+            instance.image_set.all().delete()  # Remove existing images
+
+        for image_data in images_data:
+            Image.objects.create(news_name=instance, image=image_data)
+
+        return instance

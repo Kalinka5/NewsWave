@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import BaseLayout from './BaseLayout';
 
 const CategoryNews = () => {
     const { title } = useParams();
@@ -33,43 +32,13 @@ const CategoryNews = () => {
       }
     }, [title]);
 
+    if (loading) {
+        return <p>Loading...</p>;
+      }
+
     return (
-        <div className="container mt-5">
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand><Link className="page-link" to="/page/1">News</Link></Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                    <NavDropdown title="Category" id="basic-nav-dropdown">
-                        <NavDropdown.Item><Link className="page-link" to="/category/Important">Important</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link className="page-link" to="/category/World">World</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link className="page-link" to="/category/Sport">Sport</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link className="page-link" to="/category/Games">Games</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link className="page-link" to="/category/Fashion">Fashion</Link></NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
-                </Navbar.Collapse>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
-                        <li className="page-item">
-                        <Link className="page-link" to="#">
-                            <span aria-hidden="true">&laquo;</span>
-                        </Link>
-                        </li>
-                        <li className="page-item"><Link className="page-link" to="/page1">1</Link></li>
-                        <li className="page-item"><Link className="page-link" to="/page2">2</Link></li>
-                        <li className="page-item">
-                            <Link className="page-link" to="#">
-                                <span aria-hidden="true">&raquo;</span>
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-            </Navbar>
-            <br></br>
-            {loading ? (
-            <p>Loading...</p>
-            ) : (
+        <BaseLayout>
+            <div className='container pt-3'>
             <div className="row">
                 {news.map(item => (
                 <div key={item.id} className="col-md-6 col-lg-4 mb-4">
@@ -86,8 +55,8 @@ const CategoryNews = () => {
                 </div>
                 ))}
             </div>
-            )}
-        </div>
+            </div>
+        </BaseLayout>
         );
 };
 

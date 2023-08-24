@@ -5,6 +5,7 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 
 from .models import News, Category
 from .serializers import NewsSerializer, CategorySerializer, RegisterSerializer, UserSerializer, CurrentUserSerializer
@@ -95,33 +96,35 @@ def news(request):
     return Response(serialized_item.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def single_news(request, pk):
-    item = get_object_or_404(News, pk=pk)
-    if request.method == 'GET':
-        serialized_item = NewsSerializer(item)
-        return Response(serialized_item.data, status=status.HTTP_200_OK)
-    
-    if request.user.groups.filter(name='Manager').exists():
+class NewsDetailView(APIView):
+    permission_classes = [IsAuthenticated]
 
-        if request.method == 'PUT':
-            serializer = NewsSerializer(item, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        elif request.method == 'PATCH':
-            serializer = NewsSerializer(item, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        elif request.method == 'DELETE':
-            item.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-    else:
-        return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
+    def get_object(self, pk):
+        return get_object_or_404(News, pk=pk)
+
+    def get(self, request, pk):
+        news_instance = self.get_object(pk)
+        serializer = NewsSerializer(news_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        news_item = News.objects.get(pk=pk)
+        serializer = NewsSerializer(news_item, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk):
+        news_item = News.objects.get(pk=pk)
+        serializer = NewsSerializer(news_item, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        news_instance = self.get_object(pk)
+        news_instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import axios from 'axios';
+import BaseLayout from './BaseLayout';
 
 const NewsDetails = () => {
   const { id } = useParams();
@@ -71,40 +71,8 @@ const NewsDetails = () => {
   }
 
   return (
-    <div className="container mt-5">
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand><Link className="page-link" to="/page/1">News</Link></Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                  <NavDropdown title="Category" id="basic-nav-dropdown">
-                    <NavDropdown.Item><Link className="page-link" to="/category/Important">Important</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/World">World</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Sport">Sport</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Games">Games</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Fashion">Fashion</Link></NavDropdown.Item>
-                  </NavDropdown>
-              </Nav>
-          </Navbar.Collapse>
-          <nav aria-label="Page navigation example">
-              <ul className="pagination">
-                  <li className="page-item">
-                  <Link className="page-link" to="#">
-                      <span aria-hidden="true">&laquo;</span>
-                  </Link>
-                  </li>
-                  <li className="page-item"><Link className="page-link" to="/page/1">1</Link></li>
-                  <li className="page-item"><Link className="page-link" to="/page/2">2</Link></li>
-                  <li className="page-item">
-                      <Link className="page-link" to="#">
-                          <span aria-hidden="true">&raquo;</span>
-                      </Link>
-                  </li>
-              </ul>
-          </nav>
-      </Navbar>
-      <br></br>
-      <div>
+    <BaseLayout>
+      <div className='container'>
         <h2>{news.title}</h2>
         <p><b>Description:</b> {news.description}</p>
         <p><b>Category:</b> {category.title}</p>
@@ -114,7 +82,7 @@ const NewsDetails = () => {
             key={index}
             src={`http://127.0.0.1:8000${image.image}`}
             alt={`News ${index + 1}`}
-            className="mx-3"
+            className="me-3 mb-3"
             width={`300px`}
           />
         ))}
@@ -123,7 +91,7 @@ const NewsDetails = () => {
           {group.includes('Manager') && <Link className="btn btn-primary" to={`/page/${n}/${id}/update`}>Update News</Link>}
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 };
 

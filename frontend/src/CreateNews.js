@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import BaseLayout from './BaseLayout';
 
 const CreateNewsPage = () => {
     const [newTitle, setNewTitle] = useState('');
@@ -50,39 +49,8 @@ const CreateNewsPage = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <Navbar bg="light" expand="lg">
-              <Navbar.Brand><Link className="page-link" to="/page/1">News</Link></Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <NavDropdown title="Category" id="basic-nav-dropdown">
-                          <NavDropdown.Item><Link className="page-link" to="/category/Important">Important</Link></NavDropdown.Item>
-                          <NavDropdown.Item><Link className="page-link" to="/category/World">World</Link></NavDropdown.Item>
-                          <NavDropdown.Item><Link className="page-link" to="/category/Sport">Sport</Link></NavDropdown.Item>
-                          <NavDropdown.Item><Link className="page-link" to="/category/Games">Games</Link></NavDropdown.Item>
-                          <NavDropdown.Item><Link className="page-link" to="/category/Fashion">Fashion</Link></NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
-                </Navbar.Collapse>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
-                        <li className="page-item">
-                        <Link className="page-link" to="#">
-                            <span aria-hidden="true">&laquo;</span>
-                        </Link>
-                        </li>
-                        <li className="page-item"><Link className="page-link" to="/page/1">1</Link></li>
-                        <li className="page-item"><Link className="page-link" to="/page/2">2</Link></li>
-                        <li className="page-item">
-                            <Link className="page-link" to="#">
-                                <span aria-hidden="true">&raquo;</span>
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-            </Navbar>
-            <br></br>
+      <BaseLayout>
+        <div className='container'>
             <div className="container pb-3">
               <div className="row justify-content-center">
                 <div className="col-md-6">
@@ -126,7 +94,8 @@ const CreateNewsPage = () => {
                   </div>
                 </div>
               </div>
-          </div>
+            </div>
+    </BaseLayout>
           );
 };
 

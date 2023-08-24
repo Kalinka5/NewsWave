@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import BaseLayout from './BaseLayout';
 
 const UpdateNews = () => {
   const { id } = useParams();
+  const { n } = useParams();
   const [news, setNews] = useState({});
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState({});
@@ -51,6 +52,33 @@ const UpdateNews = () => {
       });
   }, [id]);
 
+  const handleAddImage = () => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        const formData = new FormData();
+        console.log('Image:', newImage);
+        formData.append('images', newImage);
+
+        axios.patch(
+            `http://127.0.0.1:8000/api/news/${id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        .then(response => {
+            console.log('News updated successfully:', response.data);
+            navigate(`/page/${n}/${id}`);
+        })
+        .catch(error => {
+            console.error('Error updating news:', error);
+        });
+        } else {
+        console.log('Token not found in local storage. User is not authenticated.');
+        }
+    };
+
   const handleUpdateNews = () => {
     const token = localStorage.getItem('token');
 
@@ -74,7 +102,7 @@ const UpdateNews = () => {
         )
         .then(response => {
             console.log('News updated successfully:', response.data);
-            navigate('/page/1');
+            navigate(`/page/${n}/${id}`);
         })
         .catch(error => {
             console.error('Error updating news:', error);
@@ -111,50 +139,18 @@ const UpdateNews = () => {
   }
 
   return (
-    <div className="container mt-5">
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand><Link className="page-link" to="/page/1">News</Link></Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                  <NavDropdown title="Category" id="basic-nav-dropdown">
-                    <NavDropdown.Item><Link className="page-link" to="/category/Important">Important</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/World">World</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Sport">Sport</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Games">Games</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link className="page-link" to="/category/Fashion">Fashion</Link></NavDropdown.Item>
-                  </NavDropdown>
-              </Nav>
-          </Navbar.Collapse>
-          <nav aria-label="Page navigation example">
-              <ul className="pagination">
-                  <li className="page-item">
-                  <Link className="page-link" to="#">
-                      <span aria-hidden="true">&laquo;</span>
-                  </Link>
-                  </li>
-                  <li className="page-item"><Link className="page-link" to="/page/1">1</Link></li>
-                  <li className="page-item"><Link className="page-link" to="/page/2">2</Link></li>
-                  <li className="page-item">
-                      <Link className="page-link" to="#">
-                          <span aria-hidden="true">&raquo;</span>
-                      </Link>
-                  </li>
-              </ul>
-          </nav>
-      </Navbar>
-      <br></br>
-      <div>
+    <BaseLayout>
+      <div className='container pt-3'>
         <div className="mb-3">
-            <label htmlFor="title" className="form-label">Title</label>
+            <label htmlFor="title" className="form-label"><b>Title:</b></label>
             <input type="text" className="form-control" id="title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
         </div>
         <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
+            <label htmlFor="description" className="form-label"><b>Description:</b></label>
             <textarea className="form-control" id="description" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} rows="5"></textarea>
         </div>
         <div className="mb-3">
-            <label htmlFor="category" className="form-label">Category</label>
+            <label htmlFor="category" className="form-label"><b>Category:</b></label>
             <select className="form-select" id="category" aria-label="Default select example" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}>
                 <option >Choose News Category</option>
                 <option value="1">Important</option>
@@ -164,27 +160,34 @@ const UpdateNews = () => {
                 <option value="7">Fashion</option>
             </select>
         </div>
-        <div className='container text-center'>
+        <div className="mb-3">
+            <label htmlFor="image" className="form-label"><b>Image:</b></label>
+            <input className="form-control" type="file" id="image" onChange={(e) => setNewImage(e.target.files[0])}></input>
+        </div>
+        <div className='container text-left ps-0'>
         {news.images?.map((image, index) => (
           <img
             key={index}
             src={`http://127.0.0.1:8000${image.image}`}
             alt={`News ${index + 1}`}
-            className="mx-3"
+            className="me-3 mb-3"
             width={`300px`}
           />
         ))}
         </div>
-        <div className="mb-3">
-            <label htmlFor="image" className="form-label">Image</label>
-            <input className="form-control" type="file" id="image" onChange={(e) => setNewImage(e.target.files[0])}></input>
-        </div>
-        <div className='container text-center my-3'>
-          <button type="button" className="btn btn-outline-warning me-3" onClick={handleUpdateNews}>Update News</button>
-          <button type="button" className="btn btn-outline-danger" onClick={handleDeleteNews}>Delete News</button>
+        <div className='container my-3 ps-0'>
+          <div class="row justify-content-between">
+            <div class="col-4">
+              <button type="button" className="btn btn-outline-primary me-3" onClick={handleAddImage}>Add image</button>
+              <button type="button" className="btn btn-outline-secondary me-3" onClick={handleUpdateNews}>Update News</button>
+            </div>
+            <div class="col-4 text-center">
+              <button type="button" className="btn btn-outline-danger" onClick={handleDeleteNews}>Delete News</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 };
 
