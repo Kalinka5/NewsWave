@@ -2,27 +2,29 @@
   <img src="hello.svg" style="width: 100%;" alt="Click to see the source">
 </div>
 
-# NewsWave
+<h1 align="center">:✧  📺  𝒩𝑒𝓌𝓈𝒲𝒶𝓋𝑒  📺  ✧:</h1>
 
-NewsWave is a web application built using Django for the backend and React for the frontend. It provides a platform for users to read and manage news articles. The project includes JWT authentication, user registration, news listing, category filtering, and CRUD operations for news articles.
+<b><i>NewsWave</i></b> is a web application built using <b>Django</b> for the backend and <b>React</b> for the frontend. It provides a platform for users to read and manage news articles. The project includes <b>JWT authentication</b>, user registration, news listing, category filtering, and CRUD operations for news articles.
 
-## Features
+## Features 🌟
 
-- User Authentication: Users can register and log in to the site using JWT authentication.
+- **User Authentication**: 👤 Users can register and log in using JWT authentication for secure access.
 
-- News Listing: Users can view a list of news articles, with 3 articles displayed per page.
+- **News Listing**: 📰 Browse through a paginated list of news articles with categories.
 
-- Pagination: The news articles are paginated, allowing users to navigate between pages.
+- **Category Filtering**: 🗂️ Filter news articles by categories like Important, World, Sport, Games, and Fashion.
 
-- Category Filtering: Users can filter news articles by category, including "Important," "World," "Sport," "Games," and "Fashion."
+- **Create News (Manager)**: 📝 Managers can create new news articles with titles, descriptions, and images.
 
-- Create News (Manager Only): Manager users have the ability to create new news articles using the "Create News" button in the navigation bar.
+- **Edit News (Manager)**: ✏️ Managers can edit existing news articles, updating title, description, and images.
 
-- Edit News (Manager Only): Manager users can edit news articles, updating their title, description, and images.
+- **Throttling**: ⏳ Implement throttling to control API usage: anonymous users are limited to 2 requests per minute, while authenticated users can make up to 30 requests per minute.
 
-## Setup Instructions
+- **Responsive Design**: 📱 Enjoy a responsive and user-friendly design for both desktop and mobile devices.
 
-### Backend Setup (Django)
+## Setup Instructions 📄
+
+### Backend Setup (Django) 🐍
 
 1. Clone the repository:
    ```bash
@@ -49,7 +51,7 @@ NewsWave is a web application built using Django for the backend and React for t
    python manage.py runserver
    ```
 
-### Frontend Setup (React)
+### Frontend Setup (React) 🚀
 
 1. Open a new terminal window and navigate to the frontend directory:
    ```bash
@@ -65,12 +67,24 @@ NewsWave is a web application built using Django for the backend and React for t
    ```
 4. Access the web application in your browser at http://localhost:3000.
 
-# Sceenshots
+## Usage 💻
+
+- **Register**: 👤 Users can register for an account by clicking on the "Register" link and providing their details.
+
+- **Login**: 🔑 Existing users can log in using their credentials.
+
+- **News Listing**: 📰 Users can browse through the list of news articles, navigate between pages, and click on categories to filter news.
+
+- **Create News (Manager)**: 📝 Manager users can click on the "Create News" button in the navigation bar to add new articles.
+
+- **Edit News (Manager)**: ✏️ Manager users can edit news articles by clicking on the edit icon next to each article. They can update the title, description, and images.
+
+## Sceenshots 🖼️
 ![image](https://github.com/Kalinka5/NewsWave/assets/106172806/cd63fdac-05ad-482c-af2b-7df93672b981)
 
 ___
 
-![image](https://github.com/Kalinka5/NewsWave/assets/106172806/bb6a087b-7967-403d-a913-eb7ebb837961)
+![image](https://github.com/Kalinka5/NewsWave/assets/106172806/bc2b62fc-666d-4013-b66f-2efb86312143)
 
 ___
 
@@ -84,20 +98,8 @@ ___
 
 ![image](https://github.com/Kalinka5/NewsWave/assets/106172806/0ed2f00b-7f27-4b00-86ce-ed113d0e6a02)
 
-## Usage
+## Contributors 👏
 
-- **Register**: Users can register for an account by clicking on the "Register" link and providing their details.
-
-- **Login**: Existing users can log in using their credentials.
-
-- **News Listing**: Users can browse through the list of news articles, navigate between pages, and click on categories to filter news.
-
-- **Create News (Manager)**: Manager users can click on the "Create News" button in the navigation bar to add new articles.
-
-- **Edit News (Manager)**: Manager users can edit news articles by clicking on the edit icon next to each article. They can update the title, description, and images.
-
-## Contributors
-
-- Daniil Kalinevych (@Kalinka5)
+- Daniil Kalinevych (@Kalinka5) ✨
 
 Feel free to contribute to this project by creating issues and pull requests.
