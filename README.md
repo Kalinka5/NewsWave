@@ -1,5 +1,8 @@
+<div style="width: 100%;">
+  <img src="hello.svg" style="width: 100%;" alt="Click to see the source">
+</div>
+
 # NewsWave
-News project with REST API and React
 
 NewsWave is a web application built using Django for the backend and React for the frontend. It provides a platform for users to read and manage news articles. The project includes JWT authentication, user registration, news listing, category filtering, and CRUD operations for news articles.
 
