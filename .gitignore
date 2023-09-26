@@ -1,3 +1,6 @@
 users.txt
 newswave/db.sqlite3
 newswave/media/
+
+Pipfile
+Pipfile.lock
