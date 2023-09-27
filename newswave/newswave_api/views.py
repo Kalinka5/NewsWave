@@ -113,6 +113,9 @@ class NewsDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
+        if not request.user.groups.filter(name='Manager').exists():
+            return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
+
         news_item = News.objects.get(pk=pk)
         serializer = NewsSerializer(news_item, data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -121,6 +124,9 @@ class NewsDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request, pk):
+        if not request.user.groups.filter(name='Manager').exists():
+            return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
+
         news_item = News.objects.get(pk=pk)
         serializer = NewsSerializer(news_item, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
@@ -129,6 +135,9 @@ class NewsDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
+        if not request.user.groups.filter(name='Manager').exists():
+            return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
+        
         news_instance = self.get_object(pk)
         news_instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

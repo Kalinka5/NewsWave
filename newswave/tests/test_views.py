@@ -29,7 +29,7 @@ class TestViews(TestCase):
             category=self.category
         )
 
-    def test_register_user(self):
+    def test_register_user_POST(self):
         url = reverse('register_new_user')
         data = {
             'username': 'new_user',
@@ -46,21 +46,41 @@ class TestViews(TestCase):
         self.assertEqual(response.data['user']['first_name'], 'John')
         self.assertEqual(response.data['user']['last_name'], 'Week')
 
-    def test_list_categories_manager(self):
+    def test_current_user_manager_GET(self):
+        url = reverse('current_user')
+        response = self.manager_client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'testuser1')
+        self.assertEqual(response.data['first_name'], '')
+        self.assertEqual(response.data['last_name'], '')
+        self.assertEqual(response.data['email'], '')
+        self.assertEqual(response.data['groups'], ['Manager'])
+    
+    def test_current_user_ordinary_GET(self):
+        url = reverse('current_user')
+        response = self.ordinary_client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'testuser2')
+        self.assertEqual(response.data['first_name'], '')
+        self.assertEqual(response.data['last_name'], '')
+        self.assertEqual(response.data['email'], '')
+        self.assertEqual(response.data['groups'], [])
+
+    def test_list_categories_manager_GET(self):
         url = reverse('categories')
         response = self.manager_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_categories = CategorySerializer(Category.objects.all(), many=True)
         self.assertEqual(response.data, serialized_categories.data)
 
-    def test_list_categories_ordinary(self):
+    def test_list_categories_ordinary_GET(self):
         url = reverse('categories')
         response = self.ordinary_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_categories = CategorySerializer(Category.objects.all(), many=True)
         self.assertEqual(response.data, serialized_categories.data)
 
-    def test_create_category_manager(self):
+    def test_create_category_manager_POST(self):
         url = reverse('categories')
         data = {
             'slug': 'new_category',
@@ -70,7 +90,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Category.objects.count(), 2)  # Check that a new category was created
 
-    def test_create_category_ordinary(self):
+    def test_create_category_ordinary_POST(self):
         url = reverse('categories')
         data = {
             'slug': 'new_category',
@@ -79,35 +99,35 @@ class TestViews(TestCase):
         response = self.ordinary_client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_retrieve_category_manager(self):
+    def test_retrieve_category_manager_GET(self):
         url = reverse('single_category', args=[self.category.id])
         response = self.manager_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_category = CategorySerializer(self.category)
         self.assertEqual(response.data, serialized_category.data)
 
-    def test_retrieve_category_ordinary(self):
+    def test_retrieve_category_ordinary_GET(self):
         url = reverse('single_category', args=[self.category.id])
         response = self.ordinary_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_category = CategorySerializer(self.category)
         self.assertEqual(response.data, serialized_category.data)
 
-    def test_list_news_manager(self):
+    def test_list_news_manager_GET(self):
         url = reverse('news')
         response = self.manager_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_news = NewsSerializer(News.objects.all(), many=True)
         self.assertEqual(response.data, serialized_news.data)
 
-    def test_list_news_ordinary(self):
+    def test_list_news_ordinary_GET(self):
         url = reverse('news')
         response = self.ordinary_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_news = NewsSerializer(News.objects.all(), many=True)
         self.assertEqual(response.data, serialized_news.data)
 
-    def test_create_news_manager(self):
+    def test_create_news_manager_POST(self):
         url = reverse('news')
         image_file = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
         data = {
@@ -120,7 +140,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(News.objects.count(), 2)  # Check that a new news article was created
 
-    def test_create_news_ordinary(self):
+    def test_create_news_ordinary_POST(self):
         url = reverse('news')
         image_file = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
         data = {
@@ -132,16 +152,80 @@ class TestViews(TestCase):
         response = self.ordinary_client.post(url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_retrieve_news_manager(self):
+    def test_retrieve_news_manager_GET(self):
         url = reverse('single_news', args=[self.news.id])
         response = self.manager_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_news = NewsSerializer(self.news)
         self.assertEqual(response.data, serialized_news.data)
 
-    def test_retrieve_news_ordinary(self):
+    def test_retrieve_news_ordinary_GET(self):
         url = reverse('single_news', args=[self.news.id])
         response = self.ordinary_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         serialized_news = NewsSerializer(self.news)
         self.assertEqual(response.data, serialized_news.data)
+
+    def test_update_full_single_news_manager_PUT(self):
+        url = reverse('single_news', args=[self.news.id])
+        image_file = SimpleUploadedFile("test_update_image.jpg", b"file_content", content_type="image/jpeg")
+        data = {
+            'title': 'Updated News',
+            'description': 'This is an updated test news article.',
+            'category': self.category.id,
+            'images': [image_file]
+        }
+        response = self.manager_client.put(url, data, format='multipart')
+        news = News.objects.get(id=self.news.id)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(news.title, 'Updated News')
+        self.assertEqual(news.description, 'This is an updated test news article.')
+
+    def test_update_full_single_news_ordinary_PUT(self):
+        url = reverse('single_news', args=[self.news.id])
+        image_file = SimpleUploadedFile("test_update_image.jpg", b"file_content", content_type="image/jpeg")
+        data = {
+            'title': 'NOT updated News',
+            'description': 'This is NOT an updated test news article.',
+            'category': self.category.id,
+            'images': [image_file]
+        }
+        response = self.ordinary_client.put(url, data, format='multipart')
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_part_of_single_news_manager_PATCH(self):
+        url = reverse('single_news', args=[self.news.id])
+        image_file = SimpleUploadedFile("test_update_image1.jpg", b"file_content", content_type="image/jpeg")
+        data1 = {
+            'images': [image_file]
+        }
+        
+        response = self.manager_client.patch(url, data1, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['images']), 1)
+
+    def test_update_part_of_single_news_ordinary_PATCH(self):
+        url = reverse('single_news', args=[self.news.id])
+        image_file = SimpleUploadedFile("test_update_image1.jpg", b"file_content", content_type="image/jpeg")
+        data1 = {
+            'images': [image_file]
+        }
+        
+        response = self.ordinary_client.patch(url, data1, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_single_news_manager_DELETE(self):
+        url = reverse('single_news', args=[self.news.id])
+        response = self.manager_client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_single_news_ordinary_DELETE(self):
+        url = reverse('single_news', args=[self.news.id])
+        response = self.ordinary_client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
