@@ -10,6 +10,7 @@ from newswave_api.serializers import (
     NewsSerializer,
 )
 from newswave_api.models import Category, News
+import os
 
 
 class SerializerTests(TestCase):
@@ -59,7 +60,8 @@ class SerializerTests(TestCase):
         self.assertEqual(category.slug, 'test-category')
 
     def test_image_jpg_serializer(self):
-        image_path = r'C:\Users\Admin\Desktop\GIt-Hub\News_website\newswave\tests\test_images\jpg_image.jpg'
+        root_folder = os.getcwd()
+        image_path = fr'{root_folder}\tests\test_images\jpg_image.jpg'
         with open(image_path, 'rb') as image_file:
             image_data = image_file.read()
         image = SimpleUploadedFile("jpg_image.jpg", image_data, content_type="image/jpeg")
@@ -68,7 +70,8 @@ class SerializerTests(TestCase):
         self.assertTrue(serializer.is_valid())
 
     def test_image_png_serializer(self):
-        image_path = r'C:\Users\Admin\Desktop\GIt-Hub\News_website\newswave\tests\test_images\png_image.png'
+        root_folder = os.getcwd()
+        image_path = rf'{root_folder}\tests\test_images\png_image.png'
         with open(image_path, 'rb') as image_file:
             image_data = image_file.read()
         image = SimpleUploadedFile("png_image.png", image_data, content_type="image/png")
