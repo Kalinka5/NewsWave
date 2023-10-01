@@ -61,7 +61,7 @@ class SerializerTests(TestCase):
 
     def test_image_jpg_serializer(self):
         root_folder = os.getcwd()
-        image_path = fr'{root_folder}\tests\test_images\jpg_image.jpg'
+        image_path = os.path.join(root_folder, 'tests', 'test_images', 'jpg_image.jpg')
         with open(image_path, 'rb') as image_file:
             image_data = image_file.read()
         image = SimpleUploadedFile("jpg_image.jpg", image_data, content_type="image/jpeg")
@@ -71,7 +71,7 @@ class SerializerTests(TestCase):
 
     def test_image_png_serializer(self):
         root_folder = os.getcwd()
-        image_path = rf'{root_folder}\tests\test_images\png_image.png'
+        image_path = os.path.join(root_folder, 'tests', 'test_images', 'png_image.png')
         with open(image_path, 'rb') as image_file:
             image_data = image_file.read()
         image = SimpleUploadedFile("png_image.png", image_data, content_type="image/png")
