@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 import os
-from datetime import timedelta
+from datetime import datetime, timedelta
+
+from .logging_formatters import CustomJsonFormatter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,7 +130,6 @@ STATIC_URL = 'static/'
 
 
 # Media folder
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -162,3 +163,41 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+
+current_day = datetime.now().strftime('%Y-%m-%d')
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "main_format": {
+            "format": "{asctime} - {levelname} - {module} - {message}",
+            "style": "{",
+        },
+        "json_format": {
+            "()": CustomJsonFormatter,
+        }
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": f"logs/debug-{current_day}.log",
+            "formatter": "json_format"
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}

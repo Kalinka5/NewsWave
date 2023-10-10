@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
 
+import logging
+
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -11,6 +13,8 @@ from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from .models import News, Category
 from .serializers import NewsSerializer, CategorySerializer, RegisterSerializer, UserSerializer, CurrentUserSerializer
 
+
+logger = logging.getLogger("django")
 
 class RegisterApi(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -71,6 +75,7 @@ class NewsListView(APIView):
 
     def get(self, request):
         items = News.objects.prefetch_related('category', 'image_set').all()
+        logger.info("Show all news on the page...")
 
         # Filtering
         category_name = request.query_params.get('category')
