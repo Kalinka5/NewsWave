@@ -1,7 +1,7 @@
 users.txt
 newswave/db.sqlite3
 newswave/media/
-
+newswave/logs/
 
 Pipfile
 Pipfile.lock
