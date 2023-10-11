@@ -11,14 +11,15 @@
 ################################################################################
 
 asgiref==3.7.2 ; python_version >= '3.7'
-django-cors-headers==4.2.0
-django-filter==23.2
-django==4.2.4
-djangorestframework-simplejwt==5.2.2
-djangorestframework==3.14.0
-pillow==10.0.0
+django-cors-headers==4.2.0 ; python_version >= '3.8'
+django-filter==23.3 ; python_version >= '3.7'
+django==4.2.6 ; python_version >= '3.8'
+djangorestframework-simplejwt==5.3.0 ; python_version >= '3.7'
+djangorestframework==3.14.0 ; python_version >= '3.6'
+pillow==10.0.1 ; python_version >= '3.8'
 pyjwt==2.8.0 ; python_version >= '3.7'
-pytz==2023.3
+python-json-logger==2.0.7 ; python_version >= '3.6'
+pytz==2023.3.post1
 sqlparse==0.4.4 ; python_version >= '3.5'
-typing-extensions==4.7.1 ; python_version < '3.11'
+typing-extensions==4.8.0 ; python_version < '3.11'
 tzdata==2023.3 ; sys_platform == 'win32'
