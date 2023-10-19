@@ -24,9 +24,10 @@ class RegisterApi(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        logger.info(f"User (id={user.id}) was created successfully.")
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "message": "User Created Successfully.  Now perform Login to get your token",
+            "message": "User Created Successfully. Now perform Login to get your token",
         })
 
 
@@ -54,6 +55,7 @@ class CategoriesListView(APIView):
             serialized_category = CategorySerializer(data=request.data)
             serialized_category.is_valid(raise_exception=True)
             serialized_category.save()
+            logger.info(f"Category was created successfully.")
             return Response(serialized_category.data, status.HTTP_201_CREATED)
         else:
             return Response({"message": "You do not have the necessary permissions to access it!"}, status=status.HTTP_403_FORBIDDEN)
@@ -75,14 +77,15 @@ class NewsListView(APIView):
 
     def get(self, request):
         items = News.objects.prefetch_related('category', 'image_set').all()
-        logger.info("Show all news on the page...")
 
         # Filtering
+        logger.info("Filtering..")
         category_name = request.query_params.get('category')
         if category_name:
             items = items.filter(category__title=category_name)
 
         # Pagination
+        logger.info("Pagination...")
         perpage = request.query_params.get('perpage', default=3)
         page = request.query_params.get('page', default=1)
         paginator = Paginator(items, per_page=perpage)
@@ -102,6 +105,7 @@ class NewsListView(APIView):
         serialized_item = NewsSerializer(data=request.data, context={'request': request})
         serialized_item.is_valid(raise_exception=True)
         serialized_item.save()
+        logger.info(f"The News was created successfully.")
         return Response(serialized_item.data, status.HTTP_201_CREATED)
 
 
@@ -125,6 +129,7 @@ class NewsDetailView(APIView):
         serializer = NewsSerializer(news_item, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"The News (id={pk}) was fully updated.")
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -136,6 +141,7 @@ class NewsDetailView(APIView):
         serializer = NewsSerializer(news_item, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"The News (id={pk}) was partly updated.")
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -145,5 +151,6 @@ class NewsDetailView(APIView):
         
         news_instance = self.get_object(pk)
         news_instance.delete()
+        logger.info(f"The News (id={pk}) was deleted.")
         return Response(status=status.HTTP_204_NO_CONTENT)
     
